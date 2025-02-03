@@ -46,6 +46,7 @@ const Main = () => {
       alert("Producto eliminado correctamente");
       setProducts(products.filter(product => product.id !== productId));
     } catch (error) {
+      alert(`${error} - Error al eliminar producto`);
       console.error("Error eliminando el producto:", error);
     }
   };
