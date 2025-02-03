@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->decimal('price', 8, 2);
             $table->integer('stock');
             $table->text('imagen')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,5 +28,9 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('products');
+
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+        });
     }
 };

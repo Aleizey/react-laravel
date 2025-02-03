@@ -23,7 +23,6 @@ const Main = () => {
         }
 
         const data = await response.json();
-        console.log(data.data)
         setProducts(data.data);
         setmetaDatos(data);
         setLoading(false);
@@ -36,13 +35,28 @@ const Main = () => {
     fetchProducts();
   }, [page]);
 
+  const deleteProduct = async (productId) => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este producto?")) return;
+
+    try {
+      await axios.get("/sanctum/csrf-cookie");
+
+      await axios.delete(`/api/products/${productId}`, { withCredentials: true });
+
+      alert("Producto eliminado correctamente");
+      setProducts(products.filter(product => product.id !== productId));
+    } catch (error) {
+      console.error("Error eliminando el producto:", error);
+    }
+  };
+
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
-      <ProductList products={products} />
+      <ProductList products={products} deleteProduct={deleteProduct} />
     </div>
   );
 };
